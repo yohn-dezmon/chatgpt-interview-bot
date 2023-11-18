@@ -36,17 +36,26 @@ async def post_audio(file: UploadFile):
 def transcribe_audio(file: UploadFile) -> Dict[str, str]:
     """convert audio to text."""
     # UploadFile by default uploads to file.filename
-    audio_file = open(file.filename, "rb")
-    # each API call is $0.01
-    transcript = client.audio.transcriptions.create(
-    model="whisper-1", 
-    file=audio_file
-    )
+    # audio_file = open(file.filename, "rb")
+    # # each API call is $0.01
+    # transcript = client.audio.transcriptions.create(
+    # model="whisper-1", 
+    # file=audio_file
+    # )
+    transcript = {"role": "user", "content": "Who won the world series in 2020?"}
     print(transcript)
-    return {"message": "Audio has been transcribed"}
+    return transcript
 
 def get_chat_response(user_message: Dict[str, str]):
     messages = load_messages()
+    messages.append(user_message)
+
+    # Send to ChatGPT/OpenAI
+    gpt_response = {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."}
+
+    # Save messages
+    save_messages(user_message, gpt_response)
+
 
 
 def load_messages():
@@ -66,3 +75,14 @@ def load_messages():
             {"role": "system", "content": "You are inerviewing the user for a frontend React developer position. Ask short questions that are relevant to a junior level developer. Your name is Greg, the user is John. Keep responses under 30 words and be funny sometimes."}
         )
     return messages
+
+def save_messages(user_message, gpt_response):
+    file = 'database.json'
+    messages = load_messages()
+    # save prompt + response 
+    messages.append(user_message)
+    messages.append(gpt_response)
+    with open(file, 'w') as f:
+        json.dump(messages, f)
+    
+    
