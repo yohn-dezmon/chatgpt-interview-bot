@@ -55,5 +55,8 @@ Within our app, we need to create a kind of "database" to store chat history.
 
 if "database"/history is empty, we always provide an initial context for the ChatGPT session!  
 
+Stop here:  
+https://youtu.be/4y1a4syMJHM?t=1272
+
 
 
