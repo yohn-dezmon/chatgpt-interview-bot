@@ -36,25 +36,31 @@ async def post_audio(file: UploadFile):
 def transcribe_audio(file: UploadFile) -> Dict[str, str]:
     """convert audio to text."""
     # UploadFile by default uploads to file.filename
-    # audio_file = open(file.filename, "rb")
-    # # each API call is $0.01
-    # transcript = client.audio.transcriptions.create(
-    # model="whisper-1", 
-    # file=audio_file
-    # )
-    transcript = {"role": "user", "content": "Who won the world series in 2020?"}
+    audio_file = open(file.filename, "rb")
+    # each API call is $0.01
+    transcript = client.audio.transcriptions.create(
+    model="whisper-1", 
+    file=audio_file
+    )
+    # transcript = {"role": "user", "content": "Who won the world series in 2020?"}
     print(transcript)
     return transcript
 
 def get_chat_response(user_message: Dict[str, str]):
     messages = load_messages()
-    messages.append(user_message)
+    messages.append({"role": "user", "content": user_message.text})
 
     # Send to ChatGPT/OpenAI
-    gpt_response = {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."}
-
+    # gpt_response = {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."}
+    gpt_response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=messages
+    )
+    # not sure if it should be index[0] or just choices[0]
+    parsed_gpt_response = gpt_response.choices[0].message.content
+    print(gpt_response)
     # Save messages
-    save_messages(user_message, gpt_response)
+    save_messages(user_message.text, parsed_gpt_response)
 
 
 
