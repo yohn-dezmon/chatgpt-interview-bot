@@ -35,7 +35,7 @@ POST
 localhost:8000/talk
 form data: file
 KEY: file
-
+VALUE: test-audio.mp3
 ```
 
 Stop at:
@@ -56,8 +56,8 @@ Within our app, we need to create a kind of "database" to store chat history.
 if "database"/history is empty, we always provide an initial context for the ChatGPT session!  
 
 Stop here:  
-https://youtu.be/4y1a4syMJHM?t=1593  
-Stop at removing hard coded data.
+https://youtu.be/4y1a4syMJHM?t=1851  
+
 
 
 
