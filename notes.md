@@ -44,3 +44,16 @@ Stop at:
 openai.RateLimitError: Error code: 429 - {'error': {'message': 'You exceeded your current quota, please check your plan and billing details.', 'type': 'insufficient_quota', 'param': None, 'code': 'insufficient_quota'}}
 ```
 https://youtu.be/4y1a4syMJHM?t=806
+
+
+Documentation > Capabilities > Chat Completions  
+(different than video)  
+
+Everytime you submit text to ChatGPT, if you have previous text in your chat, you resend the entire chat history. Otherwise ChatGPT doesn't have memory.  
+
+Within our app, we need to create a kind of "database" to store chat history.  
+
+if "database"/history is empty, we always provide an initial context for the ChatGPT session!  
+
+
+
