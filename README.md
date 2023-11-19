@@ -1,7 +1,7 @@
 # ChatGPT Interview Bot
 
 Tutorial from Travis Media.  
-https://www.youtube.com/watch?v=4y1a4syMJHM
+https://www.youtube.com/watch?v=4y1a4syMJHM  
 This application creates an interview bot that can response with audio to our questions that we also ask via audio.  
 
 Workflow of the app:
