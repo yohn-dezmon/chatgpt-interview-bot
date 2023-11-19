@@ -13,6 +13,7 @@ import openai
 from openai import OpenAI
 from dotenv import load_dotenv
 from fastapi import FastAPI, UploadFile
+from fastapi.responses import StreamingResponse
 from typing import Dict
 
 
@@ -34,6 +35,12 @@ async def post_audio(file: UploadFile):
     user_message = transcribe_audio(file)
     chat_response = get_chat_response(user_message)
     audio_output = text_to_speech(chat_response)
+
+    # this makes it so we can listen to the audio that is returned
+    def iterfile(): 
+        yield audio_output
+
+    return StreamingResponse(iterfile(), media_type="audio/mpeg")
 
 # Functions 
 def transcribe_audio(file: UploadFile) -> Dict[str, str]:
