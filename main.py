@@ -7,6 +7,7 @@
 # 3. Save the chat history to send back and forth for context 
 import os
 import json
+import requests
 
 import openai
 from openai import OpenAI
@@ -19,6 +20,7 @@ load_dotenv()
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 openai.organization = os.getenv("OPEN_AI_ORG")
+elevenlabs_key = os.getenv("ELEVENLABS_KEY")
 client = OpenAI()
 app = FastAPI()
 
@@ -31,6 +33,7 @@ async def root():
 async def post_audio(file: UploadFile):
     user_message = transcribe_audio(file)
     chat_response = get_chat_response(user_message)
+    audio_output = text_to_speech(chat_response)
 
 # Functions 
 def transcribe_audio(file: UploadFile) -> Dict[str, str]:
@@ -62,6 +65,8 @@ def get_chat_response(user_message: Dict[str, str]):
     # Save messages
     save_messages(user_message.text, parsed_gpt_response)
 
+    return parsed_gpt_response
+
 
 
 def load_messages():
@@ -86,9 +91,39 @@ def save_messages(user_message, gpt_response):
     file = 'database.json'
     messages = load_messages()
     # save prompt + response 
-    messages.append(user_message)
-    messages.append(gpt_response)
+    messages.append({"role": "user", "content": user_message})
+    messages.append({"role": "assistant", "content": gpt_response})
     with open(file, 'w') as f:
         json.dump(messages, f)
     
     
+def text_to_speech(text):
+    body = {
+        "text": text,
+        "model_id": "eleven_monolingual_v1",
+        "voice_settings": {
+            "stability": 0,
+            "similarity_boost": 0,
+            "style": 0.5, 
+            "use_speaker_boost": True
+        }
+    }
+
+    headers = {
+        "Content-Type": "application/json",
+        "accept": "audio/mpeg",
+        "xi-api-key": elevenlabs_key
+    }
+    patrick_voice_id = "ODq5zmih8GrVes37Dizd"
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{patrick_voice_id}"
+
+    try:
+        response = requests.post(url, json=body, headers=headers)
+        if response.status_code == 200:
+            return response.content
+        else:
+            print('something wrong')
+    except Exception as e:
+        print(e)
+    
+

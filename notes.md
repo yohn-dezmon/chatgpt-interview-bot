@@ -56,8 +56,22 @@ Within our app, we need to create a kind of "database" to store chat history.
 if "database"/history is empty, we always provide an initial context for the ChatGPT session!  
 
 Stop here:  
-https://youtu.be/4y1a4syMJHM?t=1851  
+https://youtu.be/4y1a4syMJHM?t=2608
 
 
+api.elevenlabs.io/docs  
+`/v1/text-to-speech/{voice_id}`
+```
+{
+  "text": "string",
+  "model_id": "eleven_monolingual_v1",
+  "voice_settings": {
+    "stability": 0,
+    "similarity_boost": 0,
+    "style": 0,
+    "use_speaker_boost": true
+  }
+}
+```
 
-
+get the voice id with `/v1/voices`  
